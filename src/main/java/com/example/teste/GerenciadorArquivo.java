@@ -10,19 +10,19 @@ import java.util.Optional;
 
 public class GerenciadorArquivo {
 
-    private ArquivosPrograma arquivosPrograma;
+    private ArquivosService arquivosService;
     private static final String QUEBRA_LINHA = System.lineSeparator();
 
     public GerenciadorArquivo() {
-        this.arquivosPrograma = null;
+        this.arquivosService = null;
     }
 
     public String getPathArquivoCodigoFonte() {
-        return this.arquivosPrograma.getPathArquivoCodigoFonte();
+        return this.arquivosService.getPathArquivoTxt();
     }
 
     public void novoArquivo() {
-        this.arquivosPrograma = null;
+        this.arquivosService = null;
     }
 
     public String carregarConteudoArquivo() {
@@ -31,7 +31,7 @@ public class GerenciadorArquivo {
         fileChooser.getExtensionFilters().add(extension);
         File arquivo = fileChooser.showOpenDialog(null);
         if (arquivo != null) {
-            this.arquivosPrograma = new ArquivosPrograma(arquivo);
+            this.arquivosService = new ArquivosService(arquivo);
             return this.obterConteudoArquivo();
         }
         return null;
@@ -40,7 +40,7 @@ public class GerenciadorArquivo {
     private String obterConteudoArquivo() {
         StringBuilder conteudo = new StringBuilder();
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(this.arquivosPrograma.getPathArquivoCodigoFonte()))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(this.arquivosService.getPathArquivoTxt()))) {
             String linha = reader.readLine();
             while (linha != null) {
                 conteudo.append(linha).append(QUEBRA_LINHA);
@@ -62,7 +62,7 @@ public class GerenciadorArquivo {
     }
 
     public boolean temArquivoCarregado() {
-        return this.arquivosPrograma != null;
+        return this.arquivosService != null;
     }
 
     private void salvarArquivoCodigoFonteNovo(String conteudo) {
@@ -77,14 +77,14 @@ public class GerenciadorArquivo {
             if (pathArquivo == null) {
                 return;
             }
-            this.arquivosPrograma = new ArquivosPrograma(nomeArquivo, pathArquivo);
-            boolean sucesso = this.salvarArquivo(conteudo, this.arquivosPrograma.getPathArquivoCodigoFonte());
+            this.arquivosService = new ArquivosService(nomeArquivo, pathArquivo);
+            boolean sucesso = this.salvarArquivo(conteudo, this.arquivosService.getPathArquivoTxt());
             this.feedbackSalvarArquivo(sucesso);
         }
     }
 
     private void salvarArquivoCodigoFonteExistente(String conteudo) {
-        boolean sucesso = this.salvarArquivo(conteudo, this.arquivosPrograma.getPathArquivoCodigoFonte());
+        boolean sucesso = this.salvarArquivo(conteudo, this.arquivosService.getPathArquivoTxt());
         this.feedbackSalvarArquivo(sucesso);
     }
 
@@ -100,17 +100,13 @@ public class GerenciadorArquivo {
             feedbackAlert = new Alert(Alert.AlertType.INFORMATION);
             feedbackAlert.setTitle("Arquivo salvo");
             feedbackAlert.setHeaderText("Arquivo salvo com sucesso");
-            feedbackAlert.setContentText("Arquivo salvo em " + this.arquivosPrograma.getPathArquivoCodigoFonte());
+            feedbackAlert.setContentText("Arquivo salvo em " + this.arquivosService.getPathArquivoTxt());
         } else {
             feedbackAlert = new Alert(Alert.AlertType.ERROR);
             feedbackAlert.setTitle("Erro");
             feedbackAlert.setHeaderText("Ocorreu um erro ao salvar o arquivo");
         }
         feedbackAlert.showAndWait();
-    }
-
-    public void gerarArquivoCodigoObjeto(String conteudo) {
-        this.salvarArquivo(conteudo, this.arquivosPrograma.getPathArquivoCodigoObjeto());
     }
 
     private boolean salvarArquivo(String conteudoArquivo, String pathArquivo) {

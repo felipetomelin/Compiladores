@@ -27,9 +27,6 @@ public class HelloController implements Initializable {
     private VirtualizedScrollPane<CodeArea> virtualScroll;
 
     @FXML
-    private TextArea txtaInput;
-
-    @FXML
     private TextArea txtaDebug;
 
     @FXML
@@ -112,7 +109,7 @@ public class HelloController implements Initializable {
     public Button btnEquipe;
 
     public void onBtnEquipeAction() {
-        sendDebugMessage("Alunos que desenvolveram este compilador: Felipe Tomelin,  GUSTAVO");
+        sendDebugMessage("Alunos que desenvolveram este compilador: Felipe Tomelin, Felipe Augusto de Carvalho de Araújo, Gustavo Celso Bozzano\n");
     }
 
     public void sendDebugMessage(String msg) {
