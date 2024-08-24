@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import org.fxmisc.flowless.VirtualizedScrollPane?>
+<?import org.fxmisc.richtext.CodeArea?>
+<?import javafx.scene.text.Font?>
+<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
+            prefHeight="600.0" prefWidth="910.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.teste.HelloController">
+    <bottom>
+        <Label fx:id="lFileName" BorderPane.alignment="BOTTOM_LEFT">
+            <BorderPane.margin>
+                <Insets left="10.0"/>
+            </BorderPane.margin>
+        </Label>
+    </bottom>
+    <top>
+        <ToolBar prefHeight="70.0" minWidth="900" prefWidth="910.0" BorderPane.alignment="CENTER">
+            <items>
+                <Button fx:id="btnNovo" contentDisplay="TOP" mnemonicParsing="false" onAction="#onBtnNovoAction"
+                        prefHeight="70.0" prefWidth="105.0" text="novo [ctrl-n]">
+                    <graphic>
+                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                            <Image url="@./imagens/novo.png"/>
+                        </ImageView>
+                    </graphic>
+                </Button>
+                <Button fx:id="btnAbrir" contentDisplay="TOP" mnemonicParsing="false" onAction="#onBtnAbrirAction"
+                        prefHeight="70.0" prefWidth="105.0" text="abrir [ctrl-o]">
+                    <graphic>
+                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                            <Image url="@./imagens/abrir.png"/>
+                        </ImageView>
+                    </graphic>
+                </Button>
+                <Button fx:id="btnSalvar" contentDisplay="TOP" mnemonicParsing="false" onAction="#onBtnSalvarAction"
+                        prefHeight="70.0" prefWidth="105.0" text="salvar [ctrl-s]">
+                    <graphic>
+                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                            <Image url="@./imagens/salvar.png"/>
+                        </ImageView>
+                    </graphic>
+                </Button>
+                <Button fx:id="btnCopiar" contentDisplay="TOP" mnemonicParsing="false" onAction="#onBtnCopiarAction"
+                        prefHeight="70.0" prefWidth="105.0" text="copiar [ctrl-c]">
+                    <graphic>
+                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                            <Image url="@./imagens/copiar.png"/>
+                        </ImageView>
+                    </graphic>
+                </Button>
+                <Button fx:id="btnColar" contentDisplay="TOP" mnemonicParsing="false" onAction="#onBtnColarAction"
+                        prefHeight="70.0" prefWidth="105.0" text="colar [ctrl-v]">
+                    <graphic>
+                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                            <Image url="@./imagens/colar.png"/>
+                        </ImageView>
+                    </graphic>
+                </Button>
+                <Button fx:id="btnRecortar" contentDisplay="TOP" mnemonicParsing="false" onAction="#onBtnRecortarAction"
+                        prefHeight="70.0" prefWidth="105.0" text="recortar [ctrl-x]">
+                    <graphic>
+                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                            <Image url="@./imagens/recortar.png"/>
+                        </ImageView>
+                    </graphic>
+                </Button>
+                <Button fx:id="btnCompilar" contentDisplay="TOP" mnemonicParsing="false" onAction="#onBtnCompilarAction"
+                        prefHeight="70.0" prefWidth="105.0" text="compilar [F7]">
+                    <graphic>
+                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                            <Image url="@./imagens/compilar.png"/>
+                        </ImageView>
+                    </graphic>
+                </Button>
+                <Button fx:id="btnEquipe" contentDisplay="TOP" mnemonicParsing="false" onAction="#onBtnEquipeAction"
+                        prefHeight="70.0" prefWidth="105.0" text="equipe [F1]">
+                    <graphic>
+                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                            <Image url="@./imagens/equipe.png"/>
+                        </ImageView>
+                    </graphic>
+                </Button>
+            </items>
+        </ToolBar>
+    </top>
+    <center>
+        <SplitPane dividerPositions="0.5" orientation="VERTICAL" BorderPane.alignment="CENTER">
+            <items>
+                <VirtualizedScrollPane fx:id="virtualScroll" layoutX="130.0" layoutY="5.0" prefWidth="910.0">
+                    <content>
+                        <CodeArea fx:id="codeInput"/>
+                    </content>
+                </VirtualizedScrollPane>
+                <TextArea fx:id="txtaDebug" layoutX="10.0" layoutY="10.0" stylesheets="@Sytle.css">
+                    <font>
+                        <Font name="Monospaced Regular" size="12.0"/>
+                    </font>
+                </TextArea>
+            </items>
+        </SplitPane>
+    </center>
+</BorderPane>

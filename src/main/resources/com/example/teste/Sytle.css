@@ -1,0 +1,4 @@
+﻿.text-area > .scroll-pane{
+    -fx-vbar-policy:always;
+    -fx-hbar-policy:always;
+}
