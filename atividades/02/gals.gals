@@ -1,0 +1,70 @@
+#Options
+GenerateScanner = true
+GenerateParser = false
+Language = Java
+ScannerName = Lexico
+ScannerCaseSensitive = true
+ScannerTable = Compact
+Input = Stream
+#RegularDefinitions
+min: [a-z]
+mai: [A-Z]
+dig: [0-9]
+int: ([1-9]{dig}*)|0
+prefixo: i_ | f_ | s_ | b_
+
+#Tokens
+// EQUIPE: Felipe Augusto, Felipe Tomelin e Gustavo Celso
+
+res: {min}({min}|{mai})*
+
+// PALAVRAS RESERVADAS
+pr_main = res: "main"
+pr_end = res: "end"
+pr_if = res: "if"
+pr_elif = res: "elif"
+pr_else = res: "else"
+pr_false = res: "false"
+pr_true = res: "true"
+pr_read = res: "read"
+pr_write = res: "write"
+pr_writeln = res: "writeln"
+pr_repeat = res: "repeat"
+pr_until = res: "until"
+pr_while = res: "while"
+
+
+
+// simbolos especiais
+"&&"
+"||"
+"!"
+"=="
+"!="
+"<"
+">"
+"+"
+"-"
+"*"
+"/"
+","
+";"
+"="
+"("
+")"
+
+
+// formatacao
+:[\n\s\t\r]
+
+// constante
+
+const_int: {int}
+const_float: {int},({dig}*[1-9]|0)
+const_str: \"([^\n\"%]|%x)*\"
+
+//comentario de bloco
+:! >@\n[^@]*\n@<
+
+// identificador
+id:! {prefixo}((({mai}({min}|{dig})+)+{mai}?) | {min}+ ({mai}? ({min}|{dig})+)+ | {min}+ | {mai} | {mai} {min})
