@@ -17,11 +17,11 @@ public class GerenciadorArquivo {
         this.arquivosService = null;
     }
 
-    public String getPathArquivoCodigoFonte() {
+    public String GetPathArquivoCodigoFonte() {
         return this.arquivosService.getPathArquivoTxt();
     }
 
-    public void novoArquivo() {
+    public void NovoArquivo() {
         this.arquivosService = null;
     }
 
@@ -32,12 +32,12 @@ public class GerenciadorArquivo {
         File arquivo = fileChooser.showOpenDialog(null);
         if (arquivo != null) {
             this.arquivosService = new ArquivosService(arquivo);
-            return this.obterConteudoArquivo();
+            return this.ObterConteudoArquivo();
         }
         return null;
     }
 
-    private String obterConteudoArquivo() {
+    private String ObterConteudoArquivo() {
         StringBuilder conteudo = new StringBuilder();
 
         try (BufferedReader reader = new BufferedReader(new FileReader(this.arquivosService.getPathArquivoTxt()))) {
@@ -53,19 +53,19 @@ public class GerenciadorArquivo {
         return conteudo.toString();
     }
 
-    public void salvarArquivoCodigoFonte(String conteudo) {
-        if (this.temArquivoCarregado()) {
-            this.salvarArquivoCodigoFonteExistente(conteudo);
+    public void SalvarArquivoCodigoFonte(String conteudo) {
+        if (this.TemArquivoCarregado()) {
+            this.SalvarArquivoCodigoFonteExistente(conteudo);
         } else {
-            this.salvarArquivoCodigoFonteNovo(conteudo);
+            this.SalvarArquivoCodigoFonteNovo(conteudo);
         }
     }
 
-    public boolean temArquivoCarregado() {
+    public boolean TemArquivoCarregado() {
         return this.arquivosService != null;
     }
 
-    private void salvarArquivoCodigoFonteNovo(String conteudo) {
+    private void SalvarArquivoCodigoFonteNovo(String conteudo) {
         TextInputDialog dialog = new TextInputDialog();
         dialog.setTitle("Nome do arquivo");
         dialog.setHeaderText("Digite o nome do novo arquivo a ser criado");
@@ -73,28 +73,28 @@ public class GerenciadorArquivo {
         Optional<String> resposta = dialog.showAndWait();
         if (resposta.isPresent()) {
             String nomeArquivo = resposta.get();
-            String pathArquivo = this.obterPathArquivoNovo();
+            String pathArquivo = this.ObterPathArquivoNovo();
             if (pathArquivo == null) {
                 return;
             }
             this.arquivosService = new ArquivosService(nomeArquivo, pathArquivo);
-            boolean sucesso = this.salvarArquivo(conteudo, this.arquivosService.getPathArquivoTxt());
-            this.feedbackSalvarArquivo(sucesso);
+            boolean sucesso = this.SalvarArquivo(conteudo, this.arquivosService.getPathArquivoTxt());
+            this.FeedbackSalvarArquivo(sucesso);
         }
     }
 
-    private void salvarArquivoCodigoFonteExistente(String conteudo) {
-        boolean sucesso = this.salvarArquivo(conteudo, this.arquivosService.getPathArquivoTxt());
-        this.feedbackSalvarArquivo(sucesso);
+    private void SalvarArquivoCodigoFonteExistente(String conteudo) {
+        boolean sucesso = this.SalvarArquivo(conteudo, this.arquivosService.getPathArquivoTxt());
+        this.FeedbackSalvarArquivo(sucesso);
     }
 
-    private String obterPathArquivoNovo() {
+    private String ObterPathArquivoNovo() {
         DirectoryChooser directoryChooser = new DirectoryChooser();
         File diretorio = directoryChooser.showDialog(null);
         return diretorio != null ? diretorio.getPath() : null;
     }
 
-    private void feedbackSalvarArquivo(boolean sucesso) {
+    private void FeedbackSalvarArquivo(boolean sucesso) {
         Alert feedbackAlert;
         if (sucesso) {
             feedbackAlert = new Alert(Alert.AlertType.INFORMATION);
@@ -109,7 +109,7 @@ public class GerenciadorArquivo {
         feedbackAlert.showAndWait();
     }
 
-    private boolean salvarArquivo(String conteudoArquivo, String pathArquivo) {
+    private boolean SalvarArquivo(String conteudoArquivo, String pathArquivo) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(pathArquivo))) {
             writer.append(conteudoArquivo);
         } catch (IOException e) {

@@ -4,12 +4,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.input.*;
-import javafx.stage.DirectoryChooser;
-import javafx.stage.FileChooser;
 
-import java.io.*;
 import java.net.URL;
-import java.util.Optional;
 import java.util.ResourceBundle;
 
 import org.fxmisc.flowless.VirtualizedScrollPane;
@@ -46,7 +42,7 @@ public class HelloController implements Initializable {
     public Button btnNovo;
 
     public void onBtnNovoAction() {
-        this.gerenciadorArquivo.novoArquivo();
+        this.gerenciadorArquivo.NovoArquivo();
         codeInput.clear();
         txtaDebug.clear();
         lFileName.setText("");
@@ -58,7 +54,7 @@ public class HelloController implements Initializable {
     public void onBtnAbrirAction() {
         String conteudoArquivo = this.gerenciadorArquivo.carregarConteudoArquivo();
         if (conteudoArquivo != null) {
-            lFileName.setText(this.gerenciadorArquivo.getPathArquivoCodigoFonte());
+            lFileName.setText(this.gerenciadorArquivo.GetPathArquivoCodigoFonte());
             codeInput.clear();
             codeInput.appendText(conteudoArquivo);
         }
@@ -68,9 +64,9 @@ public class HelloController implements Initializable {
     public Button btnSalvar;
 
     public void onBtnSalvarAction() {
-        this.gerenciadorArquivo.salvarArquivoCodigoFonte(codeInput.getText());
-        if (this.gerenciadorArquivo.temArquivoCarregado()) {
-            lFileName.setText(this.gerenciadorArquivo.getPathArquivoCodigoFonte());
+        this.gerenciadorArquivo.SalvarArquivoCodigoFonte(codeInput.getText());
+        if (this.gerenciadorArquivo.TemArquivoCarregado()) {
+            lFileName.setText(this.gerenciadorArquivo.GetPathArquivoCodigoFonte());
         }
         txtaDebug.clear();
     }
@@ -102,7 +98,10 @@ public class HelloController implements Initializable {
     public Button btnCompilar;
 
     public void onBtnCompilarAction() {
-        sendDebugMessage("Compilação de programas ainda não foi implementada\n");
+        AnalisadorService analisadorService = new AnalisadorService();
+        txtaDebug.clear();
+        String mensagemRetorno = analisadorService.Compilar(codeInput);
+        sendDebugMessage(mensagemRetorno);
     }
 
     @FXML
