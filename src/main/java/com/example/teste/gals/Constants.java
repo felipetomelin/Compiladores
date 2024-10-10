@@ -1,6 +1,6 @@
 package com.example.teste.gals;
 
-public interface Constants extends ScannerConstants
+public interface Constants extends ScannerConstants, ParserConstants
 {
     int EPSILON  = 0;
     int DOLLAR   = 1;
@@ -38,7 +38,6 @@ public interface Constants extends ScannerConstants
     int t_const_int = 32;
     int t_const_float = 33;
     int t_const_str = 34;
-    int t_com_bl = 35;
-    int t_id = 36;
+    int t_id = 35;
 
 }

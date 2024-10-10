@@ -1,8 +1,6 @@
 package com.example.teste;
 
-import com.example.teste.gals.LexicalError;
-import com.example.teste.gals.Lexico;
-import com.example.teste.gals.Token;
+import com.example.teste.gals.*;
 import org.fxmisc.richtext.CodeArea;
 
 import static com.example.teste.gals.ScannerConstants.SCANNER_ERROR;
@@ -10,6 +8,9 @@ import static com.example.teste.gals.ScannerConstants.SCANNER_ERROR;
 public class AnalisadorService {
     private Lexico lexico;
     private String quebraLinha = "\n";
+
+    Sintatico sintatico = new Sintatico();
+    Semantico semantico = new Semantico();
 
     public String Compilar(CodeArea codeArea) {
         this.lexico = new Lexico();
@@ -21,15 +22,7 @@ public class AnalisadorService {
                 .append("lexema")
                 .append(this.quebraLinha);
         try {
-            Token token;
-            while ((token = lexico.nextToken()) != null) {
-                if (token.getId() != 35)
-                stringBuilder
-                        .append(FormatarDireita(String.valueOf(ObterLinha(codeArea, token.getPosition())), 10))
-                        .append(FormatarDireita(ObterTipo(token.getId()), 30))
-                        .append(token.getLexeme())
-                        .append(this.quebraLinha);
-            }
+            sintatico.parse(lexico, semantico);    // tradução dirigida pela sintaxe
             stringBuilder
                     .append("programa compilado com sucesso")
                     .append(this.quebraLinha);
@@ -40,7 +33,20 @@ public class AnalisadorService {
                     .append(" - ")
                     .append(FormatarMensagemErro(e, codeArea.getText()))
                     .append(this.quebraLinha);
+        } catch (SyntaticError e) {
+            System.out.println(e.getPosition() + " símbolo encontrado: na entrada " + e.getMessage());
+            stringBuilder = new StringBuilder()
+                    .append("Erro na linha ")
+                    .append(ObterLinha(codeArea, e.getPosition()))
+                    .append(" - ")
+                    .append("encontrado ")
+                    .append(this.sintatico.getCurrentToken())
+                    .append(" ")
+                    .append(e.getMessage());
+        } catch (SemanticError e) {
+            //Trata erros semânticos
         }
+
         return stringBuilder.toString();
     }
 

@@ -1348,10 +1348,10 @@ public interface ScannerConstants
         {122, 39}
     };
 
-    int[] TOKEN_STATE = {-2,  0, 18, -1, -1, 30, 31, 25, 23, 27, 24, 26, 32, 32, 28, 21, 29, 22,  2,  2,  2,  2,  2, -1, 20, 34, -1, 16, -1, 19, -2, -2, 17, 33, -2, 36, 36, -1, -2, 36, 36, -2, -2, 36, 35 };
+    int[] TOKEN_STATE = {-2,  0, 18, -1, -1, 30, 31, 25, 23, 27, 24, 26, 32, 32, 28, 21, 29, 22,  2,  2,  2,  2,  2, -1, 20, 34, -1, 16, -1, 19, -2, -2, 17, 33, -2, 35, 35, -1, -2, 35, 35, -2, -2, 35,  0 };
 
     int[] SPECIAL_CASES_INDEXES =
-        { 0, 0, 0, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13 };
+        { 0, 0, 0, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13 };
 
     String[] SPECIAL_CASES_KEYS =
         {  "elif", "else", "end", "false", "if", "main", "read", "repeat", "true", "until", "while", "write", "writeln" };
@@ -1361,21 +1361,18 @@ public interface ScannerConstants
 
     String[] SCANNER_ERROR =
     {
-        "símbolo inválido",
+            "símbolo inválido",
         "",
         "",
-        "constante_string inválida",
-        "símbolo inválido \"&&\"",
-        "",
-        "",
-        "",
+            "constante_string inválida",
+            "símbolo inválido \"&&\"",
         "",
         "",
         "",
-        "constante_float inválida",
         "",
         "",
         "",
+            "constante_float inválida",
         "",
         "",
         "",
@@ -1384,26 +1381,29 @@ public interface ScannerConstants
         "",
         "",
         "",
-        "símbolo inválido",
         "",
         "",
-        "constante_string inválida",
         "",
-        "Erro identificando const_float",
+            "símbolo inválido",
+            "",
         "",
-        "comentário de bloco inválido ou não finalizado",
-        "identificador inválido",
+            "constante_string inválida",
         "",
+            "consta_float inválida",
         "",
-        "comentário de bloco inválido ou não finalizado",
-        "",
-        "",
-        "Erro identificando const_float",
-        "comentário de bloco inválido ou não finalizado",
+            "comentário de bloco inválido ou não finalizado",
+            "identificador inválido",
         "",
         "",
-        "Erro identificando id",
-        "comentário de bloco inválido ou não finalizado",
+            "comentário de bloco inválido ou não finalizado",
+        "",
+        "",
+            "Erro identificando const_float",
+            "comentário de bloco inválido ou não finalizado",
+            "",
+            "",
+            "Erro identificando id",
+            "comentário de bloco inválido ou não finalizado",
         "",
         ""
     };
