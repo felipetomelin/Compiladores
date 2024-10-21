@@ -16,11 +16,7 @@ public class AnalisadorService {
         this.lexico = new Lexico();
         this.lexico.setInput(codeArea.getText());
 
-        StringBuilder stringBuilder = new StringBuilder()
-                .append(FormatarDireita("linha", 10))
-                .append(FormatarDireita("classe", 30))
-                .append("lexema")
-                .append(this.quebraLinha);
+        StringBuilder stringBuilder = new StringBuilder();
         try {
             sintatico.parse(lexico, semantico);    // tradução dirigida pela sintaxe
             stringBuilder
@@ -28,8 +24,8 @@ public class AnalisadorService {
                     .append(this.quebraLinha);
         } catch (LexicalError e) {
             stringBuilder = new StringBuilder()
-                    .append("linha ")
-                    .append(ObterLinha(codeArea, e.getPosition())).append(":")
+                    .append("Erro na linha ")
+                    .append(ObterLinha(codeArea, e.getPosition()))
                     .append(" - ")
                     .append(FormatarMensagemErro(e, codeArea.getText()))
                     .append(this.quebraLinha);

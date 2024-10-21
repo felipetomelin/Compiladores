@@ -1407,5 +1407,4 @@ public interface ScannerConstants
         "",
         ""
     };
-
 }
