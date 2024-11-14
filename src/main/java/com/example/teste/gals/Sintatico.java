@@ -109,8 +109,11 @@ public class Sintatico implements Constants
 
     public String getCurrentToken() {
         String token = currentToken.getLexeme();
+        System.out.println(token);
         if (token.equals("$"))
             return "EOF";
+        else if(token.startsWith("\"") && token.endsWith("\""))
+            return "constante_string";
         return token;
     }
 
