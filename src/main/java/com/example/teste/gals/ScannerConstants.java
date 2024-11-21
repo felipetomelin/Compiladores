@@ -1385,19 +1385,19 @@ public interface ScannerConstants
         "",
         "",
             "símbolo inválido",
-            "",
+        "",
         "",
             "constante_string inválida",
-        "",
-            "consta_float inválida",
-        "",
+            "",
+            "constante_float inválida",
+            "",
             "comentário de bloco inválido ou não finalizado",
             "identificador inválido",
         "",
         "",
             "comentário de bloco inválido ou não finalizado",
-        "",
-        "",
+            "",
+            "",
             "Erro identificando const_float",
             "comentário de bloco inválido ou não finalizado",
             "",
@@ -1407,4 +1407,5 @@ public interface ScannerConstants
         "",
         ""
     };
+
 }
