@@ -3,6 +3,8 @@ package com.example.teste;
 import com.example.teste.gals.*;
 import org.fxmisc.richtext.CodeArea;
 
+import java.io.Reader;
+
 import static com.example.teste.gals.ScannerConstants.SCANNER_ERROR;
 
 public class AnalisadorService {
