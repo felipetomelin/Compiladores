@@ -49,25 +49,25 @@ public class Semantico implements Constants
                         .append(QUEBRA_LINHA).append("}")
                         .append(QUEBRA_LINHA).append("}");
                 break;
-            case :
+            case 123:
                 tipo1 = this.pilhaTipos.pop();
                 tipo2 = this.pilhaTipos.pop();
                 verificarTiposNumericos(tipo1, tipo2);
                 this.codigoObjeto.append(QUEBRA_LINHA).append("add");
                 break;
-            case :
+            case 124:
                 tipo1 = this.pilhaTipos.pop();
                 tipo2 = this.pilhaTipos.pop();
                 verificarTiposNumericos(tipo1, tipo2);
                 this.codigoObjeto.append(QUEBRA_LINHA).append("sub");
                 break;
-            case :
+            case 125:
                 tipo1 = this.pilhaTipos.pop();
                 tipo2 = this.pilhaTipos.pop();
                 verificarTiposNumericos(tipo1, tipo2);
                 this.codigoObjeto.append(QUEBRA_LINHA).append("mul");
                 break;
-            case :
+            case 126:
                 tipo1 = this.pilhaTipos.pop();
                 tipo2 = this.pilhaTipos.pop();
                 verificarDivisao(tipo1, tipo2);
@@ -84,12 +84,12 @@ public class Semantico implements Constants
                 String lexemaFloat = formatarFloat(token.getLexeme());
                 this.codigoObjeto.append(QUEBRA_LINHA).append("ldc.r8 ").append(lexemaFloat);
                 break;
-            case :
-                tipo1 = this.pilhaTipos.pop();
-                verifyIsNumberType(tipo1);
-                this.pilhaTipos.push(tipo1);
-                break;
-            case :
+//            case :
+//                tipo1 = this.pilhaTipos.pop();
+//                verifyIsNumberType(tipo1);
+//                this.pilhaTipos.push(tipo1);
+//                break;
+            case 131:
                 tipo1 = this.pilhaTipos.pop();
                 verifyIsNumberType(tipo1);
                 this.pilhaTipos.push(tipo1);
@@ -97,10 +97,10 @@ public class Semantico implements Constants
                 this.codigoObjeto.append(QUEBRA_LINHA).append("conv.r8");
                 this.codigoObjeto.append(QUEBRA_LINHA).append("mul");
                 break;
-            case :
+            case 121:
                 this.operador = token.getLexeme();
                 break;
-            case :
+            case 122:
                 tipo1 = this.pilhaTipos.pop();
                 tipo2 = this.pilhaTipos.pop();
 
@@ -122,21 +122,21 @@ public class Semantico implements Constants
                         break;
                 }
                 break;
-            case :
+            case 118:
                 this.pilhaTipos.push(BOOL);
                 this.codigoObjeto.append(QUEBRA_LINHA).append("ldc.i4.1");
                 break;
-            case :
+            case 119:
                 this.pilhaTipos.push(BOOL);
                 this.codigoObjeto.append(QUEBRA_LINHA).append("ldc.i4.0");
                 break;
-            case :
+            case 120:
                 tipo1 = this.pilhaTipos.pop();
                 verificarBool(tipo1);
                 this.codigoObjeto.append(QUEBRA_LINHA).append("ldc.i4.1");
                 this.codigoObjeto.append(QUEBRA_LINHA).append("xor");
                 break;
-            case :
+            case 108:
                 tipo1 = this.pilhaTipos.pop();
 
                 if (tipo1.equals(INT_64)) {
@@ -145,95 +145,95 @@ public class Semantico implements Constants
 
                 this.codigoObjeto.append(QUEBRA_LINHA).append("call void [mscorlib]System.Console::Write(").append(tipo1).append(")");
                 break;
-            case :
+            case 107:
                 this.codigoObjeto.append(QUEBRA_LINHA).append("ldstr ").append("\"\\n\"");
                 this.codigoObjeto.append(QUEBRA_LINHA).append("call void [mscorlib]System.Console::Write(string)");
                 break;
-            case :
+            case 116:
                 tipo1 = this.pilhaTipos.pop();
                 tipo2 = this.pilhaTipos.pop();
                 verificarBool(tipo1, tipo2);
                 this.codigoObjeto.append(QUEBRA_LINHA).append("and");
                 break;
-            case :
+            case 117:
                 tipo1 = this.pilhaTipos.pop();
                 tipo2 = this.pilhaTipos.pop();
                 verificarBool(tipo1, tipo2);
                 this.codigoObjeto.append(QUEBRA_LINHA).append("or");
                 break;
-            case :
-                tipo1 = this.pilhaTipos.pop();
-                tipo2 = this.pilhaTipos.pop();
-                verificarDivisao(tipo1, tipo2);
-                this.codigoObjeto
-                        .append(QUEBRA_LINHA).append("div")
-                        .append(QUEBRA_LINHA).append("conv.i8");
-                break;
-            case :
-                this.pilhaTipos.push(CHAR);
-                this.codigoObjeto.append(QUEBRA_LINHA).append("ldstr ");
-
-                switch (token.getLexeme()) {
-                    case "\\n":
-                        this.codigoObjeto.append("\"\\n\"");
-                        break;
-                    case "\\s":
-                        this.codigoObjeto.append("\" \"");
-                        break;
-                    case "\\t":
-                        this.codigoObjeto.append("\"\\t\"");
-                        break;
-                }
-                break;
+//            case :
+//                tipo1 = this.pilhaTipos.pop();
+//                tipo2 = this.pilhaTipos.pop();
+//                verificarDivisao(tipo1, tipo2);
+//                this.codigoObjeto
+//                        .append(QUEBRA_LINHA).append("div")
+//                        .append(QUEBRA_LINHA).append("conv.i8");
+//                break;
+//            case :
+//                this.pilhaTipos.push(CHAR);
+//                this.codigoObjeto.append(QUEBRA_LINHA).append("ldstr ");
+//
+//                switch (token.getLexeme()) {
+//                    case "\\n":
+//                        this.codigoObjeto.append("\"\\n\"");
+//                        break;
+//                    case "\\s":
+//                        this.codigoObjeto.append("\" \"");
+//                        break;
+//                    case "\\t":
+//                        this.codigoObjeto.append("\"\\t\"");
+//                        break;
+//                }
+//                break;
             case 130:
                 this.pilhaTipos.push(STRING);
                 this.codigoObjeto.append(QUEBRA_LINHA).append("ldstr ").append(token.getLexeme());
                 break;
-            case :
-                this.codigoObjeto.append(QUEBRA_LINHA).append("brfalse ").append(this.criarRotulo());
-                break;
-            case :
+//            case 109: // REVISAR
+//                this.codigoObjeto.append(QUEBRA_LINHA).append("brfalse ").append(this.criarRotulo());
+//                break;
+            case 109: // REVISAR
                 String rotuloAtual = this.pilhaRotulos.pop();
                 String rotuloNovo = this.criarRotulo();
                 this.codigoObjeto.append(QUEBRA_LINHA).append("br ").append(rotuloNovo);
                 this.codigoObjeto.append(QUEBRA_LINHA).append(rotuloAtual).append(":");
                 break;
-            case :
-                this.codigoObjeto.append(QUEBRA_LINHA).append(this.pilhaRotulos.pop()).append(":");
-                break;
-            case :
-                this.codigoObjeto.append(QUEBRA_LINHA).append(this.criarRotulo()).append(":");
-                break;
-            case :
-                this.codigoObjeto.append(QUEBRA_LINHA).append("brtrue ").append(this.pilhaRotulos.pop());
-                break;
-            case :
-                switch (token.getLexeme()) {
-                    case "int":
-                        this.tipoVar = INT_64;
-                        break;
-                    case "float":
-                        this.tipoVar = FLOAT_64;
-                        break;
-                    case "boolean":
-                        this.tipoVar = BOOL;
-                        break;
-                    default:
-                        this.tipoVar = token.getLexeme();
-                        break;
-                }
-                break;
-            case :
-                for (String listaId : this.listaIds) {
-                    this.tabelaSimbolos.put(listaId, this.tipoVar);
-                    this.codigoObjeto.append(QUEBRA_LINHA).append(".locals (").append(this.tipoVar).append(" ").append(listaId).append(")");
-                }
-                this.listaIds.clear();
-                break;
-            case :
+//            case :
+//                this.codigoObjeto.append(QUEBRA_LINHA).append(this.pilhaRotulos.pop()).append(":");
+//                break;
+//            case :
+//                this.codigoObjeto.append(QUEBRA_LINHA).append(this.criarRotulo()).append(":");
+//                break;
+//            case :
+//                this.codigoObjeto.append(QUEBRA_LINHA).append("brtrue ").append(this.pilhaRotulos.pop());
+//                break;
+//            case :
+//                switch (token.getLexeme()) {
+//                    case "int":
+//                        this.tipoVar = INT_64;
+//                        break;
+//                    case "float":
+//                        this.tipoVar = FLOAT_64;
+//                        break;
+//                    case "boolean":
+//                        this.tipoVar = BOOL;
+//                        break;
+//                    default:
+//                        this.tipoVar = token.getLexeme();
+//                        break;
+//                }
+//                break;
+//            case 102 ou 104:
+//                for (String listaId : this.listaIds) {
+//                    this.tabelaSimbolos.put(listaId, this.tipoVar);
+//                    this.codigoObjeto.append(QUEBRA_LINHA).append(".locals (").append(this.tipoVar).append(" ").append(listaId).append(")");
+//                }
+//                this.listaIds.clear();
+//                break;
+            case 104:
                 this.listaIds.add(token.getLexeme());
                 break;
-            case :
+            case 127: // REVISAR
                 id = token.getLexeme();
                 tipoId = this.tabelaSimbolos.get(id);
 
@@ -244,17 +244,17 @@ public class Semantico implements Constants
                     this.codigoObjeto.append(QUEBRA_LINHA).append("conv.r8");
                 }
                 break;
-            case :
-                id = this.listaIds.pop();
-                tipoId = this.tabelaSimbolos.get(id);
-                this.pilhaTipos.pop();
-
-                if (tipoId.equals(INT_64)) {
-                    this.codigoObjeto.append(QUEBRA_LINHA).append("conv.i8");
-                }
-                this.codigoObjeto.append(QUEBRA_LINHA).append("stloc ").append(id);
-                break;
-            case :
+//            case : NAO SEI QUAL EH
+//                id = this.listaIds.pop();
+//                tipoId = this.tabelaSimbolos.get(id);
+//                this.pilhaTipos.pop();
+//
+//                if (tipoId.equals(INT_64)) {
+//                    this.codigoObjeto.append(QUEBRA_LINHA).append("conv.i8");
+//                }
+//                this.codigoObjeto.append(QUEBRA_LINHA).append("stloc ").append(id);
+//                break;
+            case 105: // revisar tb
                 for (String listaId : this.listaIds) {
                     tipoId = this.tabelaSimbolos.get(listaId);
                     String classe = "";
@@ -280,10 +280,10 @@ public class Semantico implements Constants
         verifyIsNumberType(tipo1);
         verifyIsNumberType(tipo2);
 
-        if (tipo1.equals(FLOAT_64) || tipo2.equals(FLOAT_64)) {
-            this.pilhaTipos.push(FLOAT_64);
-        } else {
+        if (tipo1.equals(INT_64) && tipo2.equals(INT_64)) {
             this.pilhaTipos.push(INT_64);
+        } else {
+            this.pilhaTipos.push(FLOAT_64);
         }
     }
 
@@ -296,12 +296,7 @@ public class Semantico implements Constants
     private void verificarDivisao(String tipo1, String tipo2) throws SemanticError {
         verifyIsNumberType(tipo1);
         verifyIsNumberType(tipo2);
-
-        if (tipo1.equals(tipo2)) {
-            this.pilhaTipos.push(tipo1);
-        } else {
-            throw new SemanticError("tipo(s) incompatível(is) em expressão aritmética", this.tokenAtual.getPosition());
-        }
+        this.pilhaTipos.push(FLOAT_64);
     }
 
     private void verificarBool(String tipo1) throws SemanticError {
