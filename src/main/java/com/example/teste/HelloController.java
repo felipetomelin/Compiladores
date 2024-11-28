@@ -99,8 +99,12 @@ public class HelloController implements Initializable {
 
     public void onBtnCompilarAction() {
         AnalisadorService analisadorService = new AnalisadorService();
-        txtaDebug.clear();
         String mensagemRetorno = analisadorService.Compilar(codeInput);
+
+        if (analisadorService.ProgramaCompiladoSucesso) {
+            this.gerenciadorArquivo.gerarArquivoCodigoObjeto(analisadorService.getCodigoObjeto());
+        }
+
         sendDebugMessage(mensagemRetorno);
     }
 

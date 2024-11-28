@@ -3,17 +3,12 @@ package com.example.teste;
 import com.example.teste.gals.*;
 import org.fxmisc.richtext.CodeArea;
 
-import java.io.*;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.util.Arrays;
-import java.util.List;
-
 import static com.example.teste.gals.ScannerConstants.SCANNER_ERROR;
 
 public class AnalisadorService {
     private Lexico lexico;
     private String quebraLinha = "\n";
+    public boolean ProgramaCompiladoSucesso;
 
     Sintatico sintatico = new Sintatico();
     Semantico semantico = new Semantico();
@@ -27,15 +22,7 @@ public class AnalisadorService {
             sintatico.parse(lexico, semantico);    // tradução dirigida pela sintaxe
             stringBuilder
                     .append("programa compilado com sucesso")
-                    .append(this.quebraLinha)
-                    .append(getCodigoObjeto().toString());
-
-            try (Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("teste.il"), "utf-8"))) {
-                writer.write(getCodigoObjeto().toString());
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-
+                    .append(this.quebraLinha);
         } catch (LexicalError e) {
             stringBuilder = new StringBuilder()
                     .append("Erro na linha ")
@@ -61,6 +48,7 @@ public class AnalisadorService {
                     .append(e.getMessage());
         }
 
+        this.ProgramaCompiladoSucesso = true;
         return stringBuilder.toString();
     }
 
@@ -71,30 +59,6 @@ public class AnalisadorService {
             codeArea.selectRange(0, 0);
         }
         return codeArea.getCaretSelectionBind().getParagraphIndex() + 1;
-    }
-
-    private String FormatarDireita(String texto, int quantidade) {
-        return String.format("%-" + quantidade + "s", texto);
-    }
-
-    private String ObterTipo(int id) {
-        switch (id) {
-            case 36:
-                return "identificador";
-            case 32:
-                return "constante int";
-            case 33:
-                return "constante float";
-            case 34:
-                return "constante string";
-        }
-        if (id >= 3 && id <= 15) {
-            return "palavra reservada";
-        }
-        if (id >= 16 && id <= 31) {
-            return "símbolo especial";
-        }
-        return "Não implementado";
     }
 
     private String FormatarMensagemErro(LexicalError error, String texto) {

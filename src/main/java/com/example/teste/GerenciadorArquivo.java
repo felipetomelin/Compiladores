@@ -65,6 +65,10 @@ public class GerenciadorArquivo {
         return this.arquivosService != null;
     }
 
+    public void gerarArquivoCodigoObjeto(String conteudo) {
+        SalvarArquivoIL(conteudo, this.arquivosService.getPathArquivoIl());
+    }
+
     private void SalvarArquivoCodigoFonteNovo(String conteudo) {
         TextInputDialog dialog = new TextInputDialog();
         dialog.setTitle("Nome do arquivo");
@@ -79,6 +83,7 @@ public class GerenciadorArquivo {
             }
             this.arquivosService = new ArquivosService(nomeArquivo, pathArquivo);
             boolean sucesso = this.SalvarArquivo(conteudo, this.arquivosService.getPathArquivoTxt());
+
             this.FeedbackSalvarArquivo(sucesso);
         }
     }
@@ -116,6 +121,14 @@ public class GerenciadorArquivo {
             return false;
         }
         return true;
+    }
+
+    private void SalvarArquivoIL(String codigoObjeto, String path){
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(path))) {
+            writer.append(codigoObjeto);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }

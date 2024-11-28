@@ -88,7 +88,7 @@ public class Semantico implements Constants {
 
                 for (String identificaor : this.listaIds) {
                     if (!tabelaSimbolos.containsKey(identificaor)) {
-                        throw new SemanticError(identificaor + " nao declarado", identificaor.length());
+                        throw new SemanticError(identificaor + " não declarado", this.tokenAtual.getPosition());
                     }
 
                     this.codigoObjeto.append(QUEBRA_LINHA).append("stloc ").append(identificaor);
@@ -99,26 +99,23 @@ public class Semantico implements Constants {
                 this.listaIds.add(token.getLexeme());
                 break;
             case 105:
-                if (!this.tabelaSimbolos.containsKey(token.getLexeme())) {
-                    throw new SemanticError(token.getLexeme() + " nao declarado", token.getLexeme().length());
+                tipoId = this.tabelaSimbolos.get(token.getLexeme());
+
+                if (tipoId == null) {
+                    throw new SemanticError(token.getLexeme() + " não declarado" ,this.tokenAtual.getPosition());
                 }
 
-                for (String listaId : this.listaIds) {
-                    tipoId = this.tabelaSimbolos.get(listaId);
-                    String classe = "";
-                    switch (tipoId) {
-                        case INT_64:
-                            classe = "Int64";
-                            break;
-                        case FLOAT_64:
-                            classe = "Double";
-                            break;
-                    }
 
-                    this.codigoObjeto.append(QUEBRA_LINHA).append("call string [mscorlib]System.Console::ReadLine()");
-                    this.codigoObjeto.append(QUEBRA_LINHA).append("call ").append(tipoId).append(" [mscorlib]System.").append(classe).append("::Parse(string)");
-                    this.codigoObjeto.append(QUEBRA_LINHA).append("stloc ").append(listaId);
-                }
+                String classe = switch (tipoId) {
+                    case INT_64 -> "Int64";
+                    case FLOAT_64 -> "Double";
+                    default -> "";
+                };
+
+                this.codigoObjeto.append(QUEBRA_LINHA).append("call string [mscorlib]System.Console::ReadLine()");
+                this.codigoObjeto.append(QUEBRA_LINHA).append("call ").append(tipoId).append(" [mscorlib]System.").append(classe).append("::Parse(string)");
+                this.codigoObjeto.append(QUEBRA_LINHA).append("stloc ").append(token.getLexeme());
+
                 this.listaIds.clear();
                 break;
             case 106:
@@ -136,7 +133,7 @@ public class Semantico implements Constants {
                     this.codigoObjeto.append(QUEBRA_LINHA).append("conv.i8");
                 }
 
-                this.codigoObjeto.append(QUEBRA_LINHA).append("call void [mscorlib]System.Console::Write(").append(tipo1).append(")");
+                this.codigoObjeto.append(QUEBRA_LINHA).append("call void [mscorlib]System.Console::WriteLine(").append(tipo1).append(")");
                 break;
             case 109:
                 this.criarRotulo();
@@ -208,7 +205,7 @@ public class Semantico implements Constants {
                 if (tipo1.equals(tipo2)) {
                     this.pilhaTipos.push(BOOL);
                 } else {
-                    throw new SemanticError("tipos incompatíveis em expressão relacional", this.tokenAtual.getPosition());
+                    throw new SemanticError("tipos incompatíveis", this.tokenAtual.getPosition());
                 }
 
                 switch (this.operador) {
@@ -250,7 +247,7 @@ public class Semantico implements Constants {
             case 127:
                 tipoId = this.tabelaSimbolos.get(token.getLexeme());
                 this.pilhaTipos.push(tipoId);
-                this.codigoObjeto.append(QUEBRA_LINHA).append("ldloc ").append(id);
+                this.codigoObjeto.append(QUEBRA_LINHA).append("ldloc ").append(token.getLexeme());
 
                 if (tipoId.equals(INT_64)) {
                     this.codigoObjeto.append(QUEBRA_LINHA).append("conv.r8");
@@ -296,7 +293,7 @@ public class Semantico implements Constants {
 
     private void verifyIsNumberType(String tipo1) throws SemanticError {
         if (!tipo1.equals(FLOAT_64) && !tipo1.equals(INT_64)) {
-            throw new SemanticError("tipo(s) incompatível(is) em expressão aritmética", this.tokenAtual.getPosition());
+            throw new SemanticError("tipo(s) incompatível(is)", this.tokenAtual.getPosition());
         }
     }
 
@@ -310,7 +307,7 @@ public class Semantico implements Constants {
         if (tipo1.equals(BOOL)) {
             this.pilhaTipos.push(BOOL);
         } else {
-            throw new SemanticError("tipo(s) incompatível(is) em expressão lógica", this.tokenAtual.getPosition());
+            throw new SemanticError("tipo(s) incompatível(is)", this.tokenAtual.getPosition());
         }
     }
 
@@ -318,7 +315,7 @@ public class Semantico implements Constants {
         if (tipo1.equals(BOOL) && tipo2.equals(BOOL)) {
             this.pilhaTipos.push(BOOL);
         } else {
-            throw new SemanticError("tipo(s) incompatível(is) em expressão lógica", this.tokenAtual.getPosition());
+            throw new SemanticError("tipo(s) incompatível(is)", this.tokenAtual.getPosition());
         }
     }
 
