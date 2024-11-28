@@ -23,6 +23,7 @@ public class AnalisadorService {
             stringBuilder
                     .append("programa compilado com sucesso")
                     .append(this.quebraLinha);
+            this.ProgramaCompiladoSucesso = true;
         } catch (LexicalError e) {
             stringBuilder = new StringBuilder()
                     .append("Erro na linha ")
@@ -48,7 +49,6 @@ public class AnalisadorService {
                     .append(e.getMessage());
         }
 
-        this.ProgramaCompiladoSucesso = true;
         return stringBuilder.toString();
     }
 
