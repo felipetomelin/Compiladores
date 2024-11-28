@@ -4,14 +4,17 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Stack;
 
-public class Semantico implements Constants
-{
+public class Semantico implements Constants {
     private static final String QUEBRA_LINHA = System.lineSeparator();
     private static final String FLOAT_64 = "float64";
     private static final String INT_64 = "int64";
     private static final String CHAR = "char";
     private static final String STRING = "string";
     private static final String BOOL = "bool";
+
+    public StringBuilder getCodigoObjeto() {
+        return codigoObjeto;
+    }
 
     private final StringBuilder codigoObjeto = new StringBuilder();
     private final Stack<String> pilhaTipos = new Stack<>();
@@ -23,8 +26,7 @@ public class Semantico implements Constants
     private String operador = "";
     private Token tokenAtual;
 
-    public void executeAction(int action, Token token)	throws SemanticError
-    {
+    public void executeAction(int action, Token token) throws SemanticError {
         this.tokenAtual = token;
 
         String tipo1 = "";
@@ -49,7 +51,29 @@ public class Semantico implements Constants
                         .append(QUEBRA_LINHA).append("}")
                         .append(QUEBRA_LINHA).append("}");
                 break;
-            //REVISAR
+            case 102:
+                for (String listaId : this.listaIds) {
+
+                    switch (listaId.substring(0, 1)) {
+                        case "i":
+                            this.tipoVar = INT_64;
+                            break;
+                        case "f":
+                            this.tipoVar = FLOAT_64;
+                            break;
+                        case "b":
+                            this.tipoVar = BOOL;
+                            break;
+                        case "s":
+                            this.tipoVar = STRING;
+                            break;
+                    }
+
+                    this.tabelaSimbolos.put(listaId, this.tipoVar);
+                    this.codigoObjeto.append(QUEBRA_LINHA).append(".locals (").append(this.tipoVar).append(" ").append(listaId).append(")");
+                }
+                this.listaIds.clear();
+                break;
             case 103:
                 tipo1 = this.pilhaTipos.pop();
 
@@ -67,61 +91,112 @@ public class Semantico implements Constants
                         throw new SemanticError(identificaor + " nao declarado", identificaor.length());
                     }
 
-                    this.codigoObjeto.append(QUEBRA_LINHA).append("stloc").append(identificaor);
+                    this.codigoObjeto.append(QUEBRA_LINHA).append("stloc ").append(identificaor);
                 }
                 this.listaIds.clear();
                 break;
             case 104:
                 this.listaIds.add(token.getLexeme());
                 break;
+            case 105:
+                if (!this.tabelaSimbolos.containsKey(token.getLexeme())) {
+                    throw new SemanticError(token.getLexeme() + " nao declarado", token.getLexeme().length());
+                }
 
-            case 123:
+                for (String listaId : this.listaIds) {
+                    tipoId = this.tabelaSimbolos.get(listaId);
+                    String classe = "";
+                    switch (tipoId) {
+                        case INT_64:
+                            classe = "Int64";
+                            break;
+                        case FLOAT_64:
+                            classe = "Double";
+                            break;
+                    }
+
+                    this.codigoObjeto.append(QUEBRA_LINHA).append("call string [mscorlib]System.Console::ReadLine()");
+                    this.codigoObjeto.append(QUEBRA_LINHA).append("call ").append(tipoId).append(" [mscorlib]System.").append(classe).append("::Parse(string)");
+                    this.codigoObjeto.append(QUEBRA_LINHA).append("stloc ").append(listaId);
+                }
+                this.listaIds.clear();
+                break;
+            case 106:
+                this.codigoObjeto.append(QUEBRA_LINHA).append("ldstr ").append(token.getLexeme());
+                this.codigoObjeto.append(QUEBRA_LINHA).append("call void [mscorlib]System.Console::Write(string)");
+                break;
+            case 107:
+                this.codigoObjeto.append(QUEBRA_LINHA).append("ldstr ").append("\"\\n\"");
+                this.codigoObjeto.append(QUEBRA_LINHA).append("call void [mscorlib]System.Console::Write(string)");
+                break;
+            case 108:
+                tipo1 = this.pilhaTipos.pop();
+
+                if (tipo1.equals(INT_64)) {
+                    this.codigoObjeto.append(QUEBRA_LINHA).append("conv.i8");
+                }
+
+                this.codigoObjeto.append(QUEBRA_LINHA).append("call void [mscorlib]System.Console::Write(").append(tipo1).append(")");
+                break;
+            case 109:
+                this.criarRotulo();
+                String rotuloNovo = this.criarRotulo();
+                this.codigoObjeto.append(QUEBRA_LINHA).append("brfalse ").append(rotuloNovo);
+                break;
+            case 110:
+                String rotulo2 = this.pilhaRotulos.pop();
+                String rotulo1 = this.pilhaRotulos.pop();
+                this.codigoObjeto.append(QUEBRA_LINHA).append("br ").append(rotulo1);
+                this.pilhaRotulos.push(rotulo1);
+                this.codigoObjeto.append(QUEBRA_LINHA).append(rotulo2).append(":");
+                break;
+            case 111:
+                String rotulo = this.pilhaRotulos.pop();
+                this.codigoObjeto.append(QUEBRA_LINHA).append(rotulo).append(":");
+                break;
+            case 112:
+                rotuloNovo = this.criarRotulo();
+                this.codigoObjeto.append(QUEBRA_LINHA).append("brfalse ").append(rotuloNovo);
+                this.pilhaRotulos.push(rotuloNovo);
+                break;
+            case 113:
+                rotulo = criarRotulo();
+                this.codigoObjeto.append(QUEBRA_LINHA).append(rotulo).append(":");
+                this.pilhaRotulos.push(rotulo);
+                break;
+            case 114:
+                rotulo = this.pilhaRotulos.pop();
+                this.codigoObjeto.append(QUEBRA_LINHA).append("brtrue ").append(rotulo);
+                break;
+            case 115:
+                rotulo = this.pilhaRotulos.pop();
+                this.codigoObjeto.append(QUEBRA_LINHA).append("brfalse ").append(rotulo);
+                break;
+            case 116:
                 tipo1 = this.pilhaTipos.pop();
                 tipo2 = this.pilhaTipos.pop();
-                verificarTiposNumericos(tipo1, tipo2);
-                this.codigoObjeto.append(QUEBRA_LINHA).append("add");
+                verificarBool(tipo1, tipo2);
+                this.codigoObjeto.append(QUEBRA_LINHA).append("and");
                 break;
-            case 124:
+            case 117:
                 tipo1 = this.pilhaTipos.pop();
                 tipo2 = this.pilhaTipos.pop();
-                verificarTiposNumericos(tipo1, tipo2);
-                this.codigoObjeto.append(QUEBRA_LINHA).append("sub");
+                verificarBool(tipo1, tipo2);
+                this.codigoObjeto.append(QUEBRA_LINHA).append("or");
                 break;
-            case 125:
+            case 118:
+                this.pilhaTipos.push(BOOL);
+                this.codigoObjeto.append(QUEBRA_LINHA).append("ldc.i4.1");
+                break;
+            case 119:
+                this.pilhaTipos.push(BOOL);
+                this.codigoObjeto.append(QUEBRA_LINHA).append("ldc.i4.0");
+                break;
+            case 120:
                 tipo1 = this.pilhaTipos.pop();
-                tipo2 = this.pilhaTipos.pop();
-                verificarTiposNumericos(tipo1, tipo2);
-                this.codigoObjeto.append(QUEBRA_LINHA).append("mul");
-                break;
-            case 126:
-                tipo1 = this.pilhaTipos.pop();
-                tipo2 = this.pilhaTipos.pop();
-                verificarDivisao(tipo1, tipo2);
-                this.codigoObjeto.append(QUEBRA_LINHA).append("div");
-                break;
-            case 128:
-                this.pilhaTipos.push(INT_64);
-                String lexemaInt = formatarInt(token.getLexeme());
-                this.codigoObjeto.append(QUEBRA_LINHA).append("ldc.i8 ").append(lexemaInt);
-                this.codigoObjeto.append(QUEBRA_LINHA).append("conv.r8");
-                break;
-            case 129:
-                this.pilhaTipos.push(FLOAT_64);
-                String lexemaFloat = formatarFloat(token.getLexeme());
-                this.codigoObjeto.append(QUEBRA_LINHA).append("ldc.r8 ").append(lexemaFloat);
-                break;
-//            case :
-//                tipo1 = this.pilhaTipos.pop();
-//                verifyIsNumberType(tipo1);
-//                this.pilhaTipos.push(tipo1);
-//                break;
-            case 131:
-                tipo1 = this.pilhaTipos.pop();
-                verifyIsNumberType(tipo1);
-                this.pilhaTipos.push(tipo1);
-                this.codigoObjeto.append(QUEBRA_LINHA).append("ldc.i8 ").append(-1);
-                this.codigoObjeto.append(QUEBRA_LINHA).append("conv.r8");
-                this.codigoObjeto.append(QUEBRA_LINHA).append("mul");
+                verificarBool(tipo1);
+                this.codigoObjeto.append(QUEBRA_LINHA).append("ldc.i4.1");
+                this.codigoObjeto.append(QUEBRA_LINHA).append("xor");
                 break;
             case 121:
                 this.operador = token.getLexeme();
@@ -148,118 +223,32 @@ public class Semantico implements Constants
                         break;
                 }
                 break;
-            case 118:
-                this.pilhaTipos.push(BOOL);
-                this.codigoObjeto.append(QUEBRA_LINHA).append("ldc.i4.1");
-                break;
-            case 119:
-                this.pilhaTipos.push(BOOL);
-                this.codigoObjeto.append(QUEBRA_LINHA).append("ldc.i4.0");
-                break;
-            case 120:
-                tipo1 = this.pilhaTipos.pop();
-                verificarBool(tipo1);
-                this.codigoObjeto.append(QUEBRA_LINHA).append("ldc.i4.1");
-                this.codigoObjeto.append(QUEBRA_LINHA).append("xor");
-                break;
-            case 108:
-                tipo1 = this.pilhaTipos.pop();
-
-                if (tipo1.equals(INT_64)) {
-                    this.codigoObjeto.append(QUEBRA_LINHA).append("conv.i8");
-                }
-
-                this.codigoObjeto.append(QUEBRA_LINHA).append("call void [mscorlib]System.Console::Write(").append(tipo1).append(")");
-                break;
-            case 107:
-                this.codigoObjeto.append(QUEBRA_LINHA).append("ldstr ").append("\"\\n\"");
-                this.codigoObjeto.append(QUEBRA_LINHA).append("call void [mscorlib]System.Console::Write(string)");
-                break;
-            case 116:
+            case 123:
                 tipo1 = this.pilhaTipos.pop();
                 tipo2 = this.pilhaTipos.pop();
-                verificarBool(tipo1, tipo2);
-                this.codigoObjeto.append(QUEBRA_LINHA).append("and");
+                verificarTiposNumericos(tipo1, tipo2);
+                this.codigoObjeto.append(QUEBRA_LINHA).append("add");
                 break;
-            case 117:
+            case 124:
                 tipo1 = this.pilhaTipos.pop();
                 tipo2 = this.pilhaTipos.pop();
-                verificarBool(tipo1, tipo2);
-                this.codigoObjeto.append(QUEBRA_LINHA).append("or");
+                verificarTiposNumericos(tipo1, tipo2);
+                this.codigoObjeto.append(QUEBRA_LINHA).append("sub");
                 break;
-//            case :
-//                tipo1 = this.pilhaTipos.pop();
-//                tipo2 = this.pilhaTipos.pop();
-//                verificarDivisao(tipo1, tipo2);
-//                this.codigoObjeto
-//                        .append(QUEBRA_LINHA).append("div")
-//                        .append(QUEBRA_LINHA).append("conv.i8");
-//                break;
-//            case :
-//                this.pilhaTipos.push(CHAR);
-//                this.codigoObjeto.append(QUEBRA_LINHA).append("ldstr ");
-//
-//                switch (token.getLexeme()) {
-//                    case "\\n":
-//                        this.codigoObjeto.append("\"\\n\"");
-//                        break;
-//                    case "\\s":
-//                        this.codigoObjeto.append("\" \"");
-//                        break;
-//                    case "\\t":
-//                        this.codigoObjeto.append("\"\\t\"");
-//                        break;
-//                }
-//                break;
-            case 130:
-                this.pilhaTipos.push(STRING);
-                this.codigoObjeto.append(QUEBRA_LINHA).append("ldstr ").append(token.getLexeme());
+            case 125:
+                tipo1 = this.pilhaTipos.pop();
+                tipo2 = this.pilhaTipos.pop();
+                verificarTiposNumericos(tipo1, tipo2);
+                this.codigoObjeto.append(QUEBRA_LINHA).append("mul");
                 break;
-//            case 109: // REVISAR
-//                this.codigoObjeto.append(QUEBRA_LINHA).append("brfalse ").append(this.criarRotulo());
-//                break;
-            case 109: // REVISAR
-                String rotuloAtual = this.pilhaRotulos.pop();
-                String rotuloNovo = this.criarRotulo();
-                this.codigoObjeto.append(QUEBRA_LINHA).append("br ").append(rotuloNovo);
-                this.codigoObjeto.append(QUEBRA_LINHA).append(rotuloAtual).append(":");
+            case 126:
+                tipo1 = this.pilhaTipos.pop();
+                tipo2 = this.pilhaTipos.pop();
+                verificarDivisao(tipo1, tipo2);
+                this.codigoObjeto.append(QUEBRA_LINHA).append("div");
                 break;
-//            case :
-//                this.codigoObjeto.append(QUEBRA_LINHA).append(this.pilhaRotulos.pop()).append(":");
-//                break;
-//            case :
-//                this.codigoObjeto.append(QUEBRA_LINHA).append(this.criarRotulo()).append(":");
-//                break;
-//            case :
-//                this.codigoObjeto.append(QUEBRA_LINHA).append("brtrue ").append(this.pilhaRotulos.pop());
-//                break;
-//            case :
-//                switch (token.getLexeme()) {
-//                    case "int":
-//                        this.tipoVar = INT_64;
-//                        break;
-//                    case "float":
-//                        this.tipoVar = FLOAT_64;
-//                        break;
-//                    case "boolean":
-//                        this.tipoVar = BOOL;
-//                        break;
-//                    default:
-//                        this.tipoVar = token.getLexeme();
-//                        break;
-//                }
-//                break;
-//            case 102 ou 104:
-//                for (String listaId : this.listaIds) {
-//                    this.tabelaSimbolos.put(listaId, this.tipoVar);
-//                    this.codigoObjeto.append(QUEBRA_LINHA).append(".locals (").append(this.tipoVar).append(" ").append(listaId).append(")");
-//                }
-//                this.listaIds.clear();
-//                break;
-            case 127: // REVISAR
-                id = token.getLexeme();
-                tipoId = this.tabelaSimbolos.get(id);
-
+            case 127:
+                tipoId = this.tabelaSimbolos.get(token.getLexeme());
                 this.pilhaTipos.push(tipoId);
                 this.codigoObjeto.append(QUEBRA_LINHA).append("ldloc ").append(id);
 
@@ -267,33 +256,28 @@ public class Semantico implements Constants
                     this.codigoObjeto.append(QUEBRA_LINHA).append("conv.r8");
                 }
                 break;
-//            case : NAO SEI QUAL EH
-//                id = this.listaIds.pop();
-//                tipoId = this.tabelaSimbolos.get(id);
-//                this.pilhaTipos.pop();
-//
-//                if (tipoId.equals(INT_64)) {
-//                    this.codigoObjeto.append(QUEBRA_LINHA).append("conv.i8");
-//                }
-//                this.codigoObjeto.append(QUEBRA_LINHA).append("stloc ").append(id);
-//                break;
-            case 105: // revisar tb
-                for (String listaId : this.listaIds) {
-                    tipoId = this.tabelaSimbolos.get(listaId);
-                    String classe = "";
-                    switch (tipoId) {
-                        case INT_64:
-                            classe = "Int64";
-                            break;
-                        case FLOAT_64:
-                            classe = "Double";
-                            break;
-                    }
-                    this.codigoObjeto.append(QUEBRA_LINHA).append("call string [mscorlib]System.Console::ReadLine()");
-                    this.codigoObjeto.append(QUEBRA_LINHA).append("call ").append(tipoId).append(" [mscorlib]System.").append(classe).append("::Parse(string)");
-                    this.codigoObjeto.append(QUEBRA_LINHA).append("stloc ").append(listaId);
-                }
-                this.listaIds.clear();
+            case 128:
+                this.pilhaTipos.push(INT_64);
+                String lexemaInt = formatarInt(token.getLexeme());
+                this.codigoObjeto.append(QUEBRA_LINHA).append("ldc.i8 ").append(lexemaInt);
+                this.codigoObjeto.append(QUEBRA_LINHA).append("conv.r8");
+                break;
+            case 129:
+                this.pilhaTipos.push(FLOAT_64);
+                String lexemaFloat = formatarFloat(token.getLexeme());
+                this.codigoObjeto.append(QUEBRA_LINHA).append("ldc.r8 ").append(lexemaFloat);
+                break;
+            case 130:
+                this.pilhaTipos.push(STRING);
+                this.codigoObjeto.append(QUEBRA_LINHA).append("ldstr ").append(token.getLexeme());
+                break;
+            case 131:
+                tipo1 = this.pilhaTipos.pop();
+                verifyIsNumberType(tipo1);
+                this.pilhaTipos.push(tipo1);
+                this.codigoObjeto.append(QUEBRA_LINHA).append("ldc.i8 ").append(-1);
+                this.codigoObjeto.append(QUEBRA_LINHA).append("conv.r8");
+                this.codigoObjeto.append(QUEBRA_LINHA).append("mul");
                 break;
         }
         this.tokenAtual = null;
