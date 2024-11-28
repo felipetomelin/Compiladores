@@ -110,55 +110,55 @@ id:! {prefixo}((({mai}({min}|{dig})+)+{mai}?) | {min}+ ({mai}? ({min}|{dig})+)+ 
 <program> ::= #100 pr_main <lista_de_instrucoes> pr_end #101;
 
 <lista_de_instrucoes> ::= <instrucao> ";" <lista_de_instrucoes1> ;
-<lista_de_instrucoes1> ::= î | <lista_de_instrucoes> ;
+<lista_de_instrucoes1> ::= Ã® | <lista_de_instrucoes> ;
 
 <instrucao> ::= <lista_de_identificadores> <instrucao1>  | <entrada_dados> | <saida_dados> | <selecao> | <repeticao> ;
-<instrucao1> ::= #102 î | "=" <expressao> #103 ;
+<instrucao1> ::= #102 Ã® | "=" <expressao> #103 ;
 
 <comando> ::= <atribuicao> | <entrada_dados> | <saida_dados> | <selecao> | <repeticao> ;
 
 <lista_de_identificadores> ::= id #104 <lista_de_identificadores1> ;
-<lista_de_identificadores1> ::= î | "," <lista_de_identificadores> ;
+<lista_de_identificadores1> ::= Ã® | "," <lista_de_identificadores> ;
 
 
 <atribuicao> ::= <lista_de_identificadores> "=" <expressao> #103 ;
 
 <entrada_dados> ::= pr_read "(" <lista_entrada> ")" ;
 <lista_entrada> ::= <opcional> id #105 <lista_entrada_> ;
-<lista_entrada_> ::= î | "," <lista_entrada> ;
-<opcional> ::= î | const_str #106 "," ;
+<lista_entrada_> ::= Ã® | "," <lista_entrada> ;
+<opcional> ::= Ã® | const_str #106 "," ;
 
 <saida_dados> ::= pr_write "(" <lista_de_expressoes> ")" | pr_writeln "(" <lista_de_expressoes> ")" ;
 
 <lista_de_expressoes> ::= <expressao> #108 <lista_de_expressoes1> ;
-<lista_de_expressoes1> ::= î | "," <lista_de_expressoes> ;
+<lista_de_expressoes1> ::= Ã® | "," <lista_de_expressoes> ;
 
 <selecao> ::= pr_if <expressao> #109 <lista_comandos> <elif_exp> #110 <else_exp> #111 pr_end ;
 
-<elif_exp> ::= î | #110 pr_elif <expressao> #112 <lista_comandos> <elif_exp> ;
+<elif_exp> ::= Ã® | #110 pr_elif <expressao> #112 <lista_comandos> <elif_exp> ;
 
-<else_exp> ::= pr_else <lista_comandos> | î ;
+<else_exp> ::= pr_else <lista_comandos> | Ã® ;
 
 <lista_comandos> ::= <comando> ";" <lista_comandos1> ;
-<lista_comandos1> ::= î | <lista_comandos> ;
+<lista_comandos1> ::= Ã® | <lista_comandos> ;
 
 <repeticao> ::= #113 pr_repeat <lista_comandos> <repeticao1> ;
 <repeticao1> ::= pr_while <expressao> #114 | pr_until <expressao> #115;
 
 <expressao> ::= <elemento> <expressao1> ;
-<expressao1> ::= î | "&&" <elemento> #116 <expressao1> | "||" <elemento> #117 <expressao1> ;
+<expressao1> ::= Ã® | "&&" <elemento> #116 <expressao1> | "||" <elemento> #117 <expressao1> ;
 <elemento> ::= <relacional> | pr_true #118 | pr_false #119 | "!" <elemento> #120 ;
 
 <relacional> ::= <aritmetica> <relacional1> ;
-<relacional1> ::= î | <operador_relacional> #121 <aritmetica> #122 ;
+<relacional1> ::= Ã® | <operador_relacional> #121 <aritmetica> #122 ;
 
 <operador_relacional>::= "==" | "!=" | "<" | ">" ;
 
 <aritmetica> ::= <termo> <aritmetica1> ;
-<aritmetica1> ::= î | "+" <termo> #123 <aritmetica1> | "-" <termo> #124 <aritmetica1> ;
+<aritmetica1> ::= Ã® | "+" <termo> #123 <aritmetica1> | "-" <termo> #124 <aritmetica1> ;
 
 <termo> ::= <fator> <termo1> ;
-<termo1> ::= î | "*" <fator> #125 <termo1> | "/" <fator> #126 <termo1> ;
+<termo1> ::= Ã® | "*" <fator> #125 <termo1> | "/" <fator> #126 <termo1> ;
 
 <fator> ::= id #127 |
  const_int #128 |

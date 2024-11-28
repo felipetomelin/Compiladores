@@ -1,0 +1,170 @@
+#Options
+GenerateScanner = true
+GenerateParser = true
+Language = Java
+ScannerName = Lexico
+ParserName = Sintatico
+SemanticName = Semantico
+ScannerCaseSensitive = true
+ScannerTable = Compact
+Input = String
+Parser = LL
+#RegularDefinitions
+min: [a-z]
+mai: [A-Z]
+dig: [0-9]
+int: ([1-9]{dig}*)|0
+prefixo: i_ | f_ | s_ | b_
+
+#Tokens
+// EQUIPE: Felipe Augusto, Felipe Tomelin e Gustavo Celso
+
+res: {min}({min}|{mai})*
+
+// PALAVRAS RESERVADAS
+pr_main = res: "main"
+pr_end = res: "end"
+pr_if = res: "if"
+pr_elif = res: "elif"
+pr_else = res: "else"
+pr_false = res: "false"
+pr_true = res: "true"
+pr_read = res: "read"
+pr_write = res: "write"
+pr_writeln = res: "writeln"
+pr_repeat = res: "repeat"
+pr_until = res: "until"
+pr_while = res: "while"
+
+
+
+// simbolos especiais
+"&&"
+"||"
+"!"
+"=="
+"!="
+"<"
+">"
+"+"
+"-"
+"*"
+"/"
+","
+";"
+"="
+"("
+")"
+
+
+// formatacao
+:[\n\s\t\r]
+
+// constante
+
+const_int: {int}
+const_float: {int},({dig}*[1-9]|0)
+const_str: \"([^\n\"%]|%x)*\"
+
+//comentario de bloco
+:! >@\n[^@]*\n@<
+
+// identificador
+id:! {prefixo}((({mai}({min}|{dig})+)+{mai}?) | {min}+ ({mai}? ({min}|{dig})+)+ | {min}+ | {mai} | {mai} {min})
+#NonTerminals
+<program>
+<lista_de_instrucoes>
+<lista_de_instrucoes1>
+<instrucao>
+<lista_de_identificadores>
+<lista_de_identificadores1>
+<atribuicao>
+<entrada_dados>
+<saida_dados>
+<selecao>
+<repeticao>
+<repeticao1>
+<expressao>
+<lista_entrada>
+<lista_entrada_>
+<opcional>
+<lista_de_expressoes>
+<lista_de_expressoes1>
+<lista_comandos>
+<lista_comandos1>
+<elif_exp>
+<else_exp>
+<instrucao1>
+<comando>
+<expressao1>
+<elemento>
+<relacional>
+<relacional1>
+<operador_relacional>
+<aritmetica>
+<aritmetica1>
+<termo>
+<termo1>
+<fator>
+#Grammar
+<program> ::= #100 pr_main <lista_de_instrucoes> pr_end #101;
+
+<lista_de_instrucoes> ::= <instrucao> ";" <lista_de_instrucoes1> ;
+<lista_de_instrucoes1> ::= î | <lista_de_instrucoes> ;
+
+<instrucao> ::= <lista_de_identificadores> <instrucao1>  | <entrada_dados> | <saida_dados> | <selecao> | <repeticao> ;
+<instrucao1> ::= #102 î | "=" <expressao> #103 ;
+
+<comando> ::= <atribuicao> | <entrada_dados> | <saida_dados> | <selecao> | <repeticao> ;
+
+<lista_de_identificadores> ::= id #104 <lista_de_identificadores1> ;
+<lista_de_identificadores1> ::= î | "," <lista_de_identificadores> ;
+
+
+<atribuicao> ::= <lista_de_identificadores> "=" <expressao> #103 ;
+
+<entrada_dados> ::= pr_read "(" <lista_entrada> ")" ;
+<lista_entrada> ::= <opcional> id #105 <lista_entrada_> ;
+<lista_entrada_> ::= î | "," <lista_entrada> ;
+<opcional> ::= î | const_str #106 "," ;
+
+<saida_dados> ::= pr_write "(" <lista_de_expressoes> ")" | pr_writeln "(" <lista_de_expressoes> ")" ;
+
+<lista_de_expressoes> ::= <expressao> #108 <lista_de_expressoes1> ;
+<lista_de_expressoes1> ::= î | "," <lista_de_expressoes> ;
+
+<selecao> ::= pr_if <expressao> #109 <lista_comandos> <elif_exp> #110 <else_exp> #111 pr_end ;
+
+<elif_exp> ::= î | #110 pr_elif <expressao> #112 <lista_comandos> <elif_exp> ;
+
+<else_exp> ::= pr_else <lista_comandos> | î ;
+
+<lista_comandos> ::= <comando> ";" <lista_comandos1> ;
+<lista_comandos1> ::= î | <lista_comandos> ;
+
+<repeticao> ::= #113 pr_repeat <lista_comandos> <repeticao1> ;
+<repeticao1> ::= pr_while <expressao> #114 | pr_until <expressao> #115;
+
+<expressao> ::= <elemento> <expressao1> ;
+<expressao1> ::= î | "&&" <elemento> #116 <expressao1> | "||" <elemento> #117 <expressao1> ;
+<elemento> ::= <relacional> | pr_true #118 | pr_false #119 | "!" <elemento> #120 ;
+
+<relacional> ::= <aritmetica> <relacional1> ;
+<relacional1> ::= î | <operador_relacional> #121 <aritmetica> #122 ;
+
+<operador_relacional>::= "==" | "!=" | "<" | ">" ;
+
+<aritmetica> ::= <termo> <aritmetica1> ;
+<aritmetica1> ::= î | "+" <termo> #123 <aritmetica1> | "-" <termo> #124 <aritmetica1> ;
+
+<termo> ::= <fator> <termo1> ;
+<termo1> ::= î | "*" <fator> #125 <termo1> | "/" <fator> #126 <termo1> ;
+
+<fator> ::= id #127 |
+ const_int #128 |
+ const_float #129 |
+ const_str #130 |
+ "(" <expressao> ")" |
+ "+" <fator> |
+ "-" <fator> #131 ; 
+

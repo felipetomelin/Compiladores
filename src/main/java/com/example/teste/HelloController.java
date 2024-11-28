@@ -98,6 +98,7 @@ public class HelloController implements Initializable {
     public Button btnCompilar;
 
     public void onBtnCompilarAction() {
+        txtaDebug.clear();
         AnalisadorService analisadorService = new AnalisadorService();
         String mensagemRetorno = analisadorService.Compilar(codeInput);
 
@@ -112,6 +113,7 @@ public class HelloController implements Initializable {
     public Button btnEquipe;
 
     public void onBtnEquipeAction() {
+        txtaDebug.clear();
         sendDebugMessage("Alunos que desenvolveram este compilador: Felipe Tomelin, Felipe Augusto de Carvalho de Araújo, Gustavo Celso Bozzano\n");
     }
 
