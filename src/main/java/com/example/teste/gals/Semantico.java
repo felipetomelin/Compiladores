@@ -49,6 +49,32 @@ public class Semantico implements Constants
                         .append(QUEBRA_LINHA).append("}")
                         .append(QUEBRA_LINHA).append("}");
                 break;
+            //REVISAR
+            case 103:
+                tipo1 = this.pilhaTipos.pop();
+
+                if (tipo1.equals(INT_64)) {
+                    this.codigoObjeto.append(QUEBRA_LINHA).append("conv.i8");
+                }
+
+                for (int i = 0; i < this.listaIds.size() - 1; i++) {
+                    this.codigoObjeto.append(QUEBRA_LINHA).append("dup");
+                }
+
+
+                for (String identificaor : this.listaIds) {
+                    if (!tabelaSimbolos.containsKey(identificaor)) {
+                        throw new SemanticError(identificaor + " nao declarado", identificaor.length());
+                    }
+
+                    this.codigoObjeto.append(QUEBRA_LINHA).append("stloc").append(identificaor);
+                }
+                this.listaIds.clear();
+                break;
+            case 104:
+                this.listaIds.add(token.getLexeme());
+                break;
+
             case 123:
                 tipo1 = this.pilhaTipos.pop();
                 tipo2 = this.pilhaTipos.pop();
@@ -230,9 +256,6 @@ public class Semantico implements Constants
 //                }
 //                this.listaIds.clear();
 //                break;
-            case 104:
-                this.listaIds.add(token.getLexeme());
-                break;
             case 127: // REVISAR
                 id = token.getLexeme();
                 tipoId = this.tabelaSimbolos.get(id);
